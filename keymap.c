@@ -6,14 +6,9 @@
 // To avoid ccls complaining
 #include "dummy_includes.h"
 
-#define KC_PC_UNDO LCTL(KC_Z)
-#define KC_PC_CUT LCTL(KC_X)
-#define KC_PC_COPY LCTL(KC_C)
-#define KC_PC_PASTE LCTL(KC_V)
-#define NO_PIPE_ALT KC_GRAVE
-#define NO_BSLS_ALT KC_EQUAL
 #define LSA_T(kc) MT(MOD_LSFT | MOD_LALT, kc)
 #define MOON_LED_LEVEL LED_LEVEL
+#define MY_CARET LT(0, KC_CIRC)
 
 enum custom_keycodes {
   RGB_SLD = ML_SAFE_RANGE,
@@ -30,25 +25,25 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
     KC_GRAVE ,  KC_1   ,  KC_2   ,  KC_3   ,  KC_4   ,  KC_5   ,  KC_NO  ,               KC_EQUAL ,  KC_6   ,  KC_7   ,   KC_8   ,  KC_9   ,  KC_0   ,  KC_MINUS,
-    KC_DELETE,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_NO  ,               TG(1)    ,  KC_Y   ,  KC_U   ,   KC_I   ,  KC_O   ,  KC_P   ,  KC_BSLASH,
-    KC_BSPACE,  KC_A   ,  KC_S   ,  KC_D   ,  LT(2,KC_F),KC_G  ,  KC_NO  ,               KC_NO    ,  KC_H   ,  KC_J   ,   KC_K   ,  KC_L   ,  LT(3,KC_SCOLON),MT(MOD_LGUI, KC_QUOTE),
-WSFT(KC_ESC), WCTL(KC_Z), KC_X   ,  KC_C   ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   ,  KC_COMMA,  KC_DOT ,  MT(MOD_RCTL, KC_SLASH),KC_RSHIFT,
-    KC_LCTRL ,  KC_NO  ,  KC_NO  ,  KC_LEFT,  KC_RIGHT,                    TG(2), TG(4)                     ,  KC_UP  ,  KC_DOWN,  KC_NO   ,  KC_NO  ,  CAPS_WORD,
+    KC_DELETE,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_NO  ,               TG(1)    ,  KC_Y   ,  KC_U   ,   KC_I   ,  KC_O   ,  KC_P   , KC_BSLASH,
+    KC_BSPACE,  KC_A   ,  KC_S   ,  KC_D   ,LT(2,KC_F), KC_G   ,  KC_NO  ,               KC_NO    ,  KC_H   ,  KC_J   ,   KC_K   ,  KC_L   ,LT(3,KC_SCOLON),MT(MOD_LGUI, KC_QUOTE),
+WSFT(KC_ESC), WCTL(KC_Z), KC_X   ,  KC_C   ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   ,  KC_COMMA,  KC_DOT ,MT(MOD_RCTL, KC_SLASH),KC_RSHIFT,
+    KC_LCTRL ,  KC_NO  ,  KC_NO  ,  KC_LEFT, KC_RIGHT,                     TG(2), TG(4)                     ,  KC_UP  ,  KC_DOWN ,  KC_NO  ,  KC_NO  , CAPS_WORD,
                                             KC_SPACE ,  KC_LALT,  KC_LGUI,               KC_RALT,  LT(1,KC_TAB),   KC_ENTER
   ),
   [1] = LAYOUT_moonlander(
     KC_ESC   ,  KC_F1  ,  KC_F2  ,  KC_F3  ,  KC_F4  ,  KC_F5  ,  _______,               _______  ,  KC_F6  ,  KC_F7  ,  KC_F8  ,  KC_F9  ,  KC_F10 ,  KC_F11,
     _______  ,  KC_EXLM,  KC_AT  ,  KC_LCBR,  KC_RCBR,  KC_PIPE,  _______,               _______  , KC_MINUS,  KC_7   ,  KC_8   ,  KC_9   ,  KC_ASTR,  KC_F12,
     _______  ,  KC_HASH,  KC_DLR ,  KC_LPRN,  KC_RPRN, KC_GRAVE,  _______,               _______  ,  KC_UNDS,  KC_4   ,  KC_5   ,  KC_6   , KC_EQUAL,KC_KP_PLUS,
-    _______  ,  KC_PERC,  KC_CIRC, KC_LBRCK, KC_RBRCK,  KC_TILD,                                     KC_AMPR,  KC_1   ,  KC_2   ,  KC_3   ,KC_BSLASH,  _______,
+    _______  ,  KC_PERC, MY_CARET, KC_LBRCK, KC_RBRCK,  KC_TILD,                                     KC_AMPR,  KC_1   ,  KC_2   ,  KC_3   ,KC_BSLASH,  _______,
     _______  , KC_COMMA,  _______,  RGB_VAD,  RGB_VAI,                   RGB_MOD, RGB_TOG                   ,  _______,  KC_0   ,  KC_DOT ,  _______, _______,
                                               _______,  _______,  _______,               _______, _______, _______
   ),
   [2] = LAYOUT_moonlander(
     _______  ,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  _______,  _______,  _______,  _______,  _______,
-    _______  ,  _______,ST_MACRO_0,LCTL(KC_RIGHT),_______,_______,_______,               _______,  _______,  _______,  TO(0)  ,ST_MACRO_1, _______, _______,
-    _______  ,  TO(0)  ,  _______,LCTL(KC_DELETE),_______,_______,_______,               _______,  KC_LEFT,  KC_DOWN,  KC_UP  ,  KC_RIGHT, _______,  _______,
-    _______  ,  _______,  _______,  _______,  _______,LCTL(KC_LEFT),                               KC_HOME,  KC_PGDOWN,KC_PGUP,  KC_END ,  _______,  _______,
+    _______  ,  _______,ST_MACRO_0,C(KC_RIGHT),_______, _______,  _______,               _______,  _______,  _______,  TO(0)  ,ST_MACRO_1, _______, _______,
+    _______  ,  TO(0)  ,  _______,C(KC_DELETE),_______, _______,  _______,               _______,  KC_LEFT,  KC_DOWN,  KC_UP  ,  KC_RIGHT, _______,  _______,
+    _______  ,  _______,  _______,  _______,  _______,C(KC_LEFT),                                  KC_HOME,  KC_PGDOWN,KC_PGUP,  KC_END ,  _______,  _______,
     _______  ,  _______,  _______,  _______,  _______,                  _______, _______                  ,  _______,  _______,  _______,  _______,  _______,
                                               _______,  _______,  _______,               _______,  _______,  _______
   ),
@@ -143,6 +138,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case RGB_SLD:
       if (record->event.pressed) {
         rgblight_mode(1);
+      }
+      return false;
+    case LT(0, KC_CIRC):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(C(KC_6));    // On hold send ctrl-^ (buffer swap)
+        return false;
+      }
+      if (record->event.pressed) {
+          tap_code16(KC_CIRC);  // On tap send ^
       }
       return false;
   }

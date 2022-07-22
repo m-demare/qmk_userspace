@@ -3,6 +3,7 @@
   #include "config.h"
   #include "../../config.h"
   #include "../../moonlander.h"
+  #include "../../../../quantum/quantum.h"
   #include "../../../../quantum/quantum_keycodes.h"
   #include "../../../../quantum/action_code.h"
   #include "../../../../quantum/action_layer.h"
