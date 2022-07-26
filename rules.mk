@@ -7,3 +7,4 @@ SPACE_CADET_ENABLE = no
 CAPS_WORD_ENABLE = yes
 
 SRC = matrix.c
+SRC += features/vim_mode.c
