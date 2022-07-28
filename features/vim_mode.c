@@ -1,7 +1,11 @@
 #include "vim_mode.h"
 
+#define MACRO_DELAY 50
+
 enum vmode {
   NORMAL,
+  DELETE,
+  CHANGE,
   INSERT
 };
 static enum vmode mode = NORMAL;
@@ -28,6 +32,7 @@ void register_or_unregister(bool keydown, uint16_t code){
 
 bool handle_insert(uint16_t keycode, keyrecord_t* record);
 bool handle_normal(uint16_t keycode, keyrecord_t* record);
+bool handle_delete(uint16_t keycode, keyrecord_t* record);
 
 static inline uint8_t get_active_mods(void){
   const uint8_t mods = get_mods();
@@ -47,6 +52,9 @@ bool process_record_vim(uint16_t keycode, keyrecord_t* record){
       return handle_insert(keycode, record);
     case NORMAL:
       return handle_normal(keycode, record);
+    case CHANGE:
+    case DELETE:
+      return handle_delete(keycode, record);
   }
   return true;
 }
@@ -131,13 +139,26 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
     case KC_O:
       if(keydown){
         mode=INSERT;
-        if(mods & MOD_MASK_SHIFT)
-          SEND_STRING(SS_TAP(X_HOME) SS_DELAY(100) SS_TAP(X_ENTER) SS_DELAY(100) SS_TAP(X_UP));
-        else
-          SEND_STRING(SS_TAP(X_END) SS_DELAY(100) SS_TAP(X_ENTER));
+        if(mods & MOD_MASK_SHIFT) {
+          del_mods(MOD_MASK_SHIFT);
+          SEND_STRING(SS_TAP(X_HOME) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER) SS_DELAY(MACRO_DELAY) SS_TAP(X_UP));
+        } else {
+          SEND_STRING(SS_TAP(X_END) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER));
+        }
       }
       break;
-
+    case KC_D:
+    case KC_C:
+      if(keydown && (mods & MOD_MASK_SHIFT)){
+        SEND_STRING(SS_LSFT(SS_TAP(X_END)) SS_DELAY(MACRO_DELAY) SS_TAP(X_BACKSPACE));
+        mode = (keycode == KC_D ? NORMAL : INSERT);
+        break;
+      }
+      if(keydown && !(mods & MOD_MASK_CTRL)) {
+        mode = (keycode == KC_D ? DELETE : CHANGE);
+        break;
+      }
+      return true;
     case KC_E:
       register_or_unregister(keydown, C(KC_RIGHT));
       break;
@@ -145,7 +166,7 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
       if(mods & MOD_MASK_CTRL)
         return true;
       if(keydown)
-        SEND_STRING(SS_LCTL(SS_TAP(X_RIGHT)) SS_DELAY(100) SS_TAP(X_RIGHT));
+        SEND_STRING(SS_LCTL(SS_TAP(X_RIGHT)) SS_DELAY(MACRO_DELAY) SS_TAP(X_RIGHT));
       break;
     case KC_B:
       register_or_unregister(keydown, C(KC_LEFT));
@@ -166,6 +187,45 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
     default:
       return true;
   }
+  return false;
+}
+
+bool handle_delete(uint16_t keycode, keyrecord_t* record){
+  const bool keydown = record->event.pressed;
+  if (!keydown) return true;
+
+  switch (keycode) {
+    case KC_E:
+    case KC_W:
+      tap_code16(C(KC_DELETE));
+      break;
+    case KC_B:
+      tap_code16(C(KC_BACKSPACE));
+      break;
+    case KC_I:
+      tap_code16(C(KC_LEFT));
+      return false; // Stay in CHANGE/DELETE
+    case KC_L:
+      tap_code16(KC_DELETE);
+      break;
+    case KC_H:
+      tap_code16(KC_BACKSPACE);
+      break;
+
+    case KC_C:
+    case KC_D:
+      if((keycode == KC_C && mode == DELETE) || (keycode == KC_D && mode == CHANGE)) {
+        mode=NORMAL;
+        return false;
+      }
+      SEND_STRING(SS_TAP(X_HOME) SS_DELAY(MACRO_DELAY) SS_LSFT(SS_TAP(X_END)) SS_DELAY(MACRO_DELAY) SS_TAP(X_BACKSPACE));
+      break;
+
+    default:
+      mode=NORMAL;
+      return false;
+  }
+  mode = ( mode==DELETE ? NORMAL : INSERT );
   return false;
 }
 
