@@ -3,15 +3,14 @@
 #include "keymap_spanish.h"
 #include "keymap_us_international.h"
 #include "layers.h"
+#include "features/compose.h"
 #include "features/vim_mode.h"
 
 
 // To avoid ccls complaining
 #include "dummy_includes.h"
 
-#define LSA_T(kc) MT(MOD_LSFT | MOD_LALT, kc)
 #define MOON_LED_LEVEL LED_LEVEL
-#define MY_CARET LT(0, KC_CIRC)
 
 enum custom_keycodes {
     VIM_W = ML_SAFE_RANGE,
@@ -25,6 +24,9 @@ enum custom_keycodes {
 #define VIM VIMISH
 #define MNM MOUSE_AND_MEDIA
 
+// Special keys
+#define MY_CARET LT(0, KC_CIRC)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_moonlander(
         KC_GRAVE ,  KC_1   ,  KC_2   ,  KC_3   ,  KC_4   ,  KC_5   ,  XXXXXXX,               KC_EQUAL ,  KC_6   ,  KC_7   ,   KC_8  ,  KC_9   ,  KC_0   ,  KC_MINUS,
@@ -32,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_BSPACE,  KC_A   ,  KC_S   ,  KC_D   ,LT(VIM,KC_F),KC_G  ,  XXXXXXX,               XXXXXXX  ,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,LT(MNM,KC_SCOLON),MT(MOD_LGUI, KC_QUOTE),
         WSFT(KC_ESC), WCTL(KC_Z), KC_X   ,  KC_C   ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,MT(MOD_RCTL, KC_SLASH),KC_RSHIFT,
         KC_LCTRL ,  XXXXXXX,  XXXXXXX,  KC_LEFT, KC_RIGHT,                   TG(VIM), TG(GAMING)                ,  KC_UP  ,  KC_DOWN,  XXXXXXX,  XXXXXXX, CAPS_WORD,
-        KC_SPACE ,  KC_LALT,  KC_LGUI,               KC_RALT,LT(SYM,KC_TAB),KC_ENTER
+        KC_SPACE ,  KC_LALT,  KC_LGUI,               COMPOSE,LT(SYM,KC_TAB),KC_ENTER
     ),
     [VIMISH] = LAYOUT_moonlander(
         _______  ,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  _______,  _______,  _______,  _______,  _______,
@@ -117,6 +119,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_record_compose(keycode, record)) { return false; }
     if (!process_record_vim(keycode, record)) { return false; }
 
     switch (keycode) {
