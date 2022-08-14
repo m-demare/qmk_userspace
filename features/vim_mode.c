@@ -1,4 +1,5 @@
 #include "vim_mode.h"
+#include "moonlander.h"
 
 #define MACRO_DELAY 50
 
@@ -46,6 +47,7 @@ static inline uint8_t get_active_mods(void){
 
 bool process_record_vim(uint16_t keycode, keyrecord_t* record){
     if(layer != VIMISH) return true;
+    ML_LED_2((mode != INSERT));
 
     switch (mode) {
         case INSERT:
@@ -233,8 +235,12 @@ void layer_state_set_vim(layer_state_t state){
     layer = get_highest_layer(state);
     if(layer != VIMISH){
         unregister_keycode();
-        if(!IS_LAYER_ON_STATE(state, VIMISH))
+        if(IS_LAYER_ON_STATE(state, VIMISH)){
+            ML_LED_2((mode != INSERT));
+        } else{
+            ML_LED_2(false);
             mode = NORMAL;
+        }
     }
 }
 
