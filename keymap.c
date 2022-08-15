@@ -18,8 +18,8 @@ enum custom_keycodes {
 };
 
 // Abbreviations
-#define WCTL(key) (MT(MOD_LCTL, key))
-#define WSFT(key) (MT(MOD_LSFT, key))
+#define WCTL(key) (MT(MOD_LCTL, KC_##key))
+#define WSFT(key) (MT(MOD_LSFT, KC_##key))
 #define SYM SYMBOLS
 #define VIM VIMISH
 #define MNM MOUSE_AND_MEDIA
@@ -32,17 +32,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRAVE ,  KC_1   ,  KC_2   ,  KC_3   ,  KC_4   ,  KC_5   ,  XXXXXXX,               KC_EQUAL ,  KC_6   ,  KC_7   ,   KC_8  ,  KC_9   ,  KC_0   , KC_MINUS,
         KC_DELETE,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  XXXXXXX,               TG(SYM)  ,  KC_Y   ,  KC_U   ,   KC_I  ,  KC_O   ,  KC_P   ,  KC_BSLS,
         KC_BSPACE,  KC_A   ,  KC_S   ,  KC_D   ,LT(VIM,KC_F),KC_G  ,  XXXXXXX,               XXXXXXX  ,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,LT(MNM,KC_SCLN),MT(MOD_LGUI, KC_QUOTE),
-        WSFT(KC_ESC), WCTL(KC_Z), KC_X,  KC_C  ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,MT(MOD_RCTL, KC_SLASH),KC_RSHIFT,
+        WSFT(ESC),  WCTL(Z),  KC_X   ,  KC_C   ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,MT(MOD_RCTL, KC_SLSH),KC_RSFT,
         KC_LCTRL ,  XXXXXXX,  XXXXXXX,  KC_LEFT, KC_RIGHT,                   TG(VIM), TG(GAMING)                ,  KC_UP  ,  KC_DOWN,  XXXXXXX,  XXXXXXX,  XXXXXXX,
                                                 KC_SPACE ,  KC_LALT,  KC_LGUI,               COMPOSE,LT(SYM,KC_TAB),KC_ENTER
     ),
     [VIMISH] = LAYOUT_moonlander(
-        _______  ,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        _______  ,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  _______,               _______,  KC_Y   ,  KC_U   ,   KC_I  ,  KC_O   ,  KC_P   ,  _______,
-        _______  ,  KC_A   ,  KC_S   ,  KC_D   ,  _______,  KC_G   ,  _______,               _______,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,  _______,  _______,
-        _______  ,WCTL(KC_Z), KC_X   ,  KC_C   ,  KC_V   ,  KC_B,                                      KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,  _______,  _______,
-        _______  ,  _______,  _______,  _______,  _______,                  _______, _______                  ,  _______,  _______,  _______,  _______,  _______,
-                                                  _______,  _______,  _______,               _______,  _______,  _______
+        _______  ,  _______,  _______,  _______,  _______,  _______,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,  _______,
+        _______  ,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  _______,               _______  ,  KC_Y   ,  KC_U   ,   KC_I  ,  KC_O   ,  KC_P   ,  _______,
+        _______  ,  KC_A   ,  KC_S   ,  KC_D   ,  _______,  KC_G   ,  _______,               _______  ,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,  _______,  _______,
+        _______  ,  WCTL(Z),  KC_X   ,  KC_C   ,  KC_V   ,  KC_B,                                        KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,  _______,  _______,
+        _______  ,  _______,  _______,  _______,  _______,                  _______, _______                    ,  _______,  _______,  _______,  _______,  _______,
+                                                  _______,  _______,  _______,               _______  ,  _______,  _______
     ),
     [SYMBOLS] = LAYOUT_moonlander(
         KC_ESC   ,  KC_F1  ,  KC_F2  ,  KC_F3  ,  KC_F4  ,  KC_F5  ,  _______,               _______  ,  KC_F6  ,  KC_F7  ,  KC_F8  ,  KC_F9  ,  KC_F10 ,  KC_F11 ,
@@ -53,20 +53,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                   _______,  _______,  _______,               _______  ,  _______,  _______
     ),
     [MOUSE_AND_MEDIA] = LAYOUT_moonlander(
-        _______  , _______,  _______,  _______,  _______,  _______,  _______,                _______,  _______,  _______,  _______,  _______,  _______,  RESET,
-        _______  , _______,  KC_BTN1,  KC_MS_U,  KC_BTN2,  KC_WH_U,  _______,                _______,  _______,  _______,  _______,  _______,  _______, _______,
-        _______  , _______,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_D,  _______,                _______,  _______,  _______,  _______,  _______,  _______,KC_MEDIA_PLAY_PAUSE,
-        _______  , _______,  _______,  _______,  _______,  _______,                                    _______,  _______,  _______,  _______,  _______,  _______,
-        _______  , _______,  _______,KC_MEDIA_PREV_TRACK,KC_MEDIA_NEXT_TRACK,_______,_______                  ,  KC_VOLU,  KC_VOLD,  KC_MUTE,_______,_______,
-                                                _______  , _______,  _______,               _______,  KC_WBAK,  KC_WFWD
+        _______  ,  _______,  _______,  _______,  _______,  _______,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,    RESET,
+        _______  ,  _______,  KC_BTN1,  KC_MS_U,  KC_BTN2,  KC_WH_U,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,  _______,
+        _______  ,  _______,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_D,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,  KC_MPLY,
+        _______  ,  _______,  _______,  _______,  _______,  _______,                                     _______,  _______,  _______,  _______,  _______,  _______,
+        _______  ,  _______,  _______,  KC_MPRV,  KC_MNXT,                   _______,_______                    ,  KC_VOLU,  KC_VOLD,  KC_MUTE,  _______,  _______,
+                                                _______  ,  _______,  _______,               _______  ,  KC_WBAK,  KC_WFWD
     ),
     [GAMING] = LAYOUT_moonlander(
-        KC_ESC   ,  _______,  _______,  _______,  _______,  _______,  _______,               _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        KC_TAB   ,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  _______,  _______,               _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        KC_CAPS  ,  KC_A   ,  KC_S   ,  KC_D   ,  KC_F   ,  _______,  _______,               _______,  _______,  _______,  _______,  KC_UP  ,  _______,  _______,
-        KC_LSHIFT,  KC_Z   ,  KC_X   ,  KC_C   ,  _______,  _______,                                   _______,  _______,  KC_LEFT,  KC_DOWN, KC_RIGHT,  _______,
-        KC_LCTRL ,  _______,  _______,  _______,  _______,                  _______, _______                  ,  _______,  _______,  _______,  _______,  _______,
-                                                KC_SPACE ,  _______,  _______,               _______,  _______,  _______
+        KC_ESC   ,  _______,  _______,  _______,  _______,  _______,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,  _______,
+        KC_TAB   ,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  _______,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,  _______,
+        KC_CAPS  ,  KC_A   ,  KC_S   ,  KC_D   ,  KC_F   ,  _______,  _______,               _______  ,  _______,  _______,  _______,  KC_UP  ,  _______,  _______,
+        KC_LSHIFT,  KC_Z   ,  KC_X   ,  KC_C   ,  _______,  _______,                                     _______,  _______,  KC_LEFT,  KC_DOWN, KC_RIGHT,  _______,
+        KC_LCTRL ,  _______,  _______,  _______,  _______,                  _______, _______                    ,  _______,  _______,  _______,  _______,  _______,
+                                                KC_SPACE ,  _______,  _______,               _______  ,  _______,  _______
     ),
 };
 

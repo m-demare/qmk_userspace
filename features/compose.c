@@ -1,5 +1,5 @@
 #include "compose.h"
-#include "print.h"
+#include "moonlander.h"
 
 #define MACRO_DELAY 50
 
@@ -27,16 +27,19 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
             if(record->event.pressed && record->tap.count > 2){
                 platform = platform == LINUX ? WINDOWS : LINUX;
                 composing = false;
+                ML_LED_4(false);
                 return true;
             }
             if(record->tap.count > 1){
                 // To give the option of actually press RALT
                 composing = false;
+                ML_LED_4(false);
                 return true;
             }
             is_hold = record->tap.count != 1;
             const bool keydown = record->event.pressed;
             composing = (is_hold && keydown) || (!is_hold && ((keydown && !composing) || (!keydown && composing)));
+            ML_LED_4(composing);
             return false;
         case KC_A:
         case KC_E:
@@ -53,9 +56,11 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
             break;
         default:
             composing = is_hold;
+            ML_LED_4(composing);
             return true;
     }
     composing = is_hold;
+    ML_LED_4(composing);
     return false;
 }
 
