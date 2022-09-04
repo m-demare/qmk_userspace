@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
-#include "keymap_spanish.h"
 #include "keymap_us_international.h"
 #include "layers.h"
 #include "features/compose.h"
@@ -18,11 +17,13 @@ enum custom_keycodes {
 };
 
 // Abbreviations
-#define WCTL(key) (MT(MOD_LCTL, KC_##key))
-#define WSFT(key) (MT(MOD_LSFT, KC_##key))
+#define CTLT(kc) MT(MOD_LCTL, KC_##kc)
+#define RCTLT(kc) MT(MOD_RCTL, KC_##kc)
+#define SFTT(key) (MT(MOD_LSFT, KC_##key))
+#define LGUIT(kc) MT(MOD_LGUI, KC_##kc)
 #define SYM SYMBOLS
 #define VIM VIMISH
-#define MNM MOUSE_AND_MEDIA
+#define MY_SCLN LT(MOUSE_AND_MEDIA,KC_SCLN)
 
 // Special keys
 #define MY_CARET LT(0, KC_CIRC)
@@ -31,8 +32,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_moonlander(
         KC_GRAVE ,  KC_1   ,  KC_2   ,  KC_3   ,  KC_4   ,  KC_5   ,  XXXXXXX,               KC_EQUAL ,  KC_6   ,  KC_7   ,   KC_8  ,  KC_9   ,  KC_0   , KC_MINUS,
         KC_DELETE,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  XXXXXXX,               TG(SYM)  ,  KC_Y   ,  KC_U   ,   KC_I  ,  KC_O   ,  KC_P   ,  KC_BSLS,
-        KC_BSPACE,  KC_A   ,  KC_S   ,  KC_D   ,LT(VIM,KC_F),KC_G  ,  XXXXXXX,               XXXXXXX  ,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,LT(MNM,KC_SCLN),MT(MOD_LGUI, KC_QUOTE),
-        WSFT(ESC),  WCTL(Z),  KC_X   ,  KC_C   ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,MT(MOD_RCTL, KC_SLSH),KC_RSFT,
+        KC_BSPACE,  KC_A   ,  KC_S   ,  KC_D   ,LT(VIM,KC_F),KC_G  ,  XXXXXXX,               XXXXXXX  ,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,MY_SCLN,LGUIT(QUOT),
+        SFTT(ESC),  CTLT(Z),  KC_X   ,  KC_C   ,  KC_V   ,  KC_B   ,                                     KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,RCTLT(SLSH),KC_RSFT,
         KC_LCTRL ,  XXXXXXX,  XXXXXXX,  KC_LEFT, KC_RIGHT,                   TG(VIM), TG(GAMING)                ,  KC_UP  ,  KC_DOWN,  XXXXXXX,  XXXXXXX,  XXXXXXX,
                                                 KC_SPACE ,  KC_LALT,  KC_LGUI,               COMPOSE,LT(SYM,KC_TAB),KC_ENTER
     ),
@@ -40,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______  ,  _______,  _______,  _______,  _______,  _______,  _______,               _______  ,  _______,  _______,  _______,  _______,  _______,  _______,
         _______  ,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  _______,               _______  ,  KC_Y   ,  KC_U   ,   KC_I  ,  KC_O   ,  KC_P   ,  _______,
         _______  ,  KC_A   ,  KC_S   ,  KC_D   ,  _______,  KC_G   ,  _______,               _______  ,  KC_H   ,  KC_J   ,   KC_K  ,  KC_L   ,  _______,  _______,
-        _______  ,  WCTL(Z),  KC_X   ,  KC_C   ,  KC_V   ,  KC_B,                                        KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,  _______,  _______,
+        _______  ,  CTLT(Z),  KC_X   ,  KC_C   ,  KC_V   ,  KC_B,                                        KC_N   ,  KC_M   , KC_COMMA,  KC_DOT ,  _______,  _______,
         _______  ,  _______,  _______,  _______,  _______,                  _______, _______                    ,  _______,  _______,  _______,  _______,  _______,
                                                   _______,  _______,  _______,               _______  ,  _______,  _______
     ),
