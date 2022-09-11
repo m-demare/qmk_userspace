@@ -7,7 +7,8 @@ enum vmode {
     NORMAL,
     DELETE,
     CHANGE,
-    INSERT
+    INSERT,
+    G_MODE
 };
 static enum vmode mode = NORMAL;
 static enum layers layer = QWERTY;
@@ -34,6 +35,7 @@ void register_or_unregister(bool keydown, uint16_t code){
 bool handle_insert(uint16_t keycode, keyrecord_t* record);
 bool handle_normal(uint16_t keycode, keyrecord_t* record);
 bool handle_delete(uint16_t keycode, keyrecord_t* record);
+bool handle_g_mode(uint16_t keycode, keyrecord_t* record);
 
 static inline uint8_t get_active_mods(void){
     const uint8_t mods = get_mods();
@@ -57,6 +59,8 @@ bool process_record_vim(uint16_t keycode, keyrecord_t* record){
         case CHANGE:
         case DELETE:
             return handle_delete(keycode, record);
+        case G_MODE:
+            return handle_g_mode(keycode, record);
     }
     return true;
 }
@@ -150,6 +154,10 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
             }
             break;
         case KC_D:
+            if(mods & MOD_MASK_CTRL) {
+                register_or_unregister(keydown, KC_PGDN);
+                break;
+            } //else:
         case KC_C:
             if(keydown && (mods & MOD_MASK_SHIFT)){
                 SEND_STRING(SS_LSFT(SS_TAP(X_END)) SS_DELAY(MACRO_DELAY) SS_TAP(X_BACKSPACE));
@@ -161,21 +169,38 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 break;
             }
             return true;
+        case KC_G:
+            if(mods & MOD_MASK_SHIFT){
+                if(keydown){
+                    del_mods(MOD_MASK_SHIFT);
+                    tap_code16(C(KC_END));
+                }
+            } else if(!keydown) {
+                mode = G_MODE;
+            }
+            break;
+
         case KC_E:
             register_or_unregister(keydown, C(KC_RIGHT));
             break;
         case KC_W:
-            if(mods & MOD_MASK_CTRL)
+            if(mods & MOD_MASK_CTRL) // To allow to close tab with C-w
                 return true;
             if(keydown)
-                SEND_STRING(SS_LCTL(SS_TAP(X_RIGHT)) SS_DELAY(MACRO_DELAY) SS_TAP(X_RIGHT));
+                register_or_unregister(keydown, C(KC_RIGHT));
             break;
         case KC_B:
             register_or_unregister(keydown, C(KC_LEFT));
             break;
 
+        case KC_P:
+            register_or_unregister(keydown, C(KC_V));
+            break;
         case KC_U:
-            register_or_unregister(keydown, C(KC_Z));
+            if(mods & MOD_MASK_CTRL)
+                register_or_unregister(keydown, KC_PGUP);
+            else
+                register_or_unregister(keydown, C(KC_Z));
             break;
         case KC_R:
             if(mods & MOD_MASK_CTRL){
@@ -187,7 +212,7 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
             if(keydown) tap_code16(C(KC_F));
             break;
         default:
-            return true;
+            return (mods & MOD_MASK_CTRL) || (keycode < KC_A || keycode > KC_Z);
     }
     return false;
 }
@@ -228,6 +253,19 @@ bool handle_delete(uint16_t keycode, keyrecord_t* record){
             return false;
     }
     mode = ( mode==DELETE ? NORMAL : INSERT );
+    return false;
+}
+
+bool handle_g_mode(uint16_t keycode, keyrecord_t* record){
+    if(keycode == KC_G){
+        if(record->event.pressed) {
+            tap_code16(C(KC_HOME));
+        } else {
+            mode = NORMAL;
+        }
+        return false;
+    }
+    mode = NORMAL;
     return false;
 }
 
