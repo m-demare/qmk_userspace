@@ -8,10 +8,13 @@ enum vmode {
     DELETE,
     CHANGE,
     INSERT,
-    G_MODE
+    G_MODE,
+#ifdef VIM_VISUAL_MODE
+    VISUAL
+#endif /* VIM_VISUAL_MODE */
 };
 static enum vmode mode = NORMAL;
-static enum layers layer = QWERTY;
+static bool is_vim_layer_on = false;
 static uint16_t registered_keycode = KC_NO;
 
 static inline void unregister_keycode(void){
@@ -32,12 +35,15 @@ void register_or_unregister(bool keydown, uint16_t code){
     else unregister_keycode();
 }
 
-bool handle_insert(uint16_t keycode, keyrecord_t* record);
-bool handle_normal(uint16_t keycode, keyrecord_t* record);
-bool handle_delete(uint16_t keycode, keyrecord_t* record);
-bool handle_g_mode(uint16_t keycode, keyrecord_t* record);
+static bool handle_insert(uint16_t keycode, keyrecord_t* record);
+static bool handle_normal(uint16_t keycode, keyrecord_t* record);
+static bool handle_delete(uint16_t keycode, keyrecord_t* record);
+static bool handle_g_mode(uint16_t keycode, keyrecord_t* record);
+#ifdef VIM_VISUAL_MODE
+static bool handle_visual(uint16_t keycode, keyrecord_t* record);
+#endif /* VIM_VISUAL_MODE */
 
-static inline uint8_t get_active_mods(void){
+static uint8_t get_active_mods(void){
     const uint8_t mods = get_mods();
 #ifndef NO_ACTION_ONESHOT
     const uint8_t all_mods = mods | get_oneshot_mods();
@@ -48,7 +54,7 @@ static inline uint8_t get_active_mods(void){
 }
 
 bool process_record_vim(uint16_t keycode, keyrecord_t* record){
-    if(layer != VIMISH) return true;
+    if(!is_vim_layer_on) return true;
     ML_LED_2((mode != INSERT));
 
     switch (mode) {
@@ -61,11 +67,15 @@ bool process_record_vim(uint16_t keycode, keyrecord_t* record){
             return handle_delete(keycode, record);
         case G_MODE:
             return handle_g_mode(keycode, record);
+#ifdef VIM_VISUAL_MODE
+        case VISUAL:
+            return handle_visual(keycode, record);
+#endif /* VIM_VISUAL_MODE */
     }
     return true;
 }
 
-bool handle_insert(uint16_t keycode, keyrecord_t* record){
+static bool handle_insert(uint16_t keycode, keyrecord_t* record){
     const bool keydown = record->event.pressed;
 
     switch (keycode) {
@@ -87,7 +97,7 @@ bool handle_insert(uint16_t keycode, keyrecord_t* record){
     return true;
 }
 
-bool handle_normal(uint16_t keycode, keyrecord_t* record){
+static bool handle_normal(uint16_t keycode, keyrecord_t* record){
     uint8_t mods = get_active_mods();
 
     // Ignore vim_mode if super is pressed
@@ -109,6 +119,25 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
         case KC_L:
             register_or_unregister(keydown, KC_RIGHT);
             break;
+        case KC_E:
+            register_or_unregister(keydown, C(KC_RIGHT));
+            break;
+        case KC_W:
+            if(mods & MOD_MASK_CTRL) // To allow to close tab with C-w
+                return true;
+            register_or_unregister(keydown, C(KC_RIGHT));
+            break;
+        case KC_B:
+            register_or_unregister(keydown, C(KC_LEFT));
+            break;
+        case KC_DLR:
+            register_or_unregister(keydown, KC_END);
+            break;
+        case LT(0, KC_CIRC): // my ^
+            if(record->tap.count==0) { return false; }
+            register_or_unregister(keydown, KC_HOME);
+            break;
+
 
         case KC_N:
             register_or_unregister(keydown, KC_HOME);
@@ -179,19 +208,19 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 mode = G_MODE;
             }
             break;
-
-        case KC_E:
-            register_or_unregister(keydown, C(KC_RIGHT));
-            break;
-        case KC_W:
-            if(mods & MOD_MASK_CTRL) // To allow to close tab with C-w
-                return true;
-            if(keydown)
-                register_or_unregister(keydown, C(KC_RIGHT));
-            break;
-        case KC_B:
-            register_or_unregister(keydown, C(KC_LEFT));
-            break;
+        case KC_V:
+            if(mods & MOD_MASK_SHIFT){
+                if(keydown){
+                    tap_code16(KC_HOME);
+                    tap_code16(S(KC_END));
+                }
+            }
+#ifdef VIM_VISUAL_MODE
+            if(!keydown) {
+                mode = VISUAL;
+            }
+#endif /* DEBUG */
+        break;
 
         case KC_P:
             register_or_unregister(keydown, C(KC_V));
@@ -208,8 +237,8 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
             }
             break;
         case MT(MOD_RCTL, KC_SLASH):
-            if(record->tap.count==0) return true;
-            if(keydown) tap_code16(C(KC_F));
+            if(record->tap.count==0) { return true; }
+            if(keydown) { tap_code16(C(KC_F)); }
             break;
         default:
             return (mods & MOD_MASK_CTRL) || (keycode < KC_A || keycode > KC_Z);
@@ -217,7 +246,7 @@ bool handle_normal(uint16_t keycode, keyrecord_t* record){
     return false;
 }
 
-bool handle_delete(uint16_t keycode, keyrecord_t* record){
+static bool handle_delete(uint16_t keycode, keyrecord_t* record){
     const bool keydown = record->event.pressed;
     if (!keydown) return true;
 
@@ -256,7 +285,7 @@ bool handle_delete(uint16_t keycode, keyrecord_t* record){
     return false;
 }
 
-bool handle_g_mode(uint16_t keycode, keyrecord_t* record){
+static bool handle_g_mode(uint16_t keycode, keyrecord_t* record){
     if(keycode == KC_G){
         if(record->event.pressed) {
             tap_code16(C(KC_HOME));
@@ -269,16 +298,81 @@ bool handle_g_mode(uint16_t keycode, keyrecord_t* record){
     return false;
 }
 
-void layer_state_set_vim(layer_state_t state){
-    layer = get_highest_layer(state);
-    if(layer != VIMISH){
-        unregister_keycode();
-        if(IS_LAYER_ON_STATE(state, VIMISH)){
-            ML_LED_2((mode != INSERT));
-        } else{
-            ML_LED_2(false);
+#ifdef VIM_VISUAL_MODE
+static bool handle_visual(uint16_t keycode, keyrecord_t* record){
+    uint8_t mods = get_active_mods();
+
+    const bool keydown = record->event.pressed;
+
+    switch (keycode) {
+        case KC_H:
+            register_or_unregister(keydown, S(KC_LEFT));
+            break;
+        case KC_J:
+            register_or_unregister(keydown, S(KC_DOWN));
+            break;
+        case KC_K:
+            register_or_unregister(keydown, S(KC_UP));
+            break;
+        case KC_L:
+            register_or_unregister(keydown, S(KC_RIGHT));
+            break;
+
+        case KC_E:
+            register_or_unregister(keydown, S(C(KC_RIGHT)));
+            break;
+        case KC_W:
+            if(mods & MOD_MASK_CTRL) // To allow to close tab with C-w
+                return true;
+            register_or_unregister(keydown, S(C(KC_RIGHT)));
+            break;
+        case KC_B:
+            register_or_unregister(keydown, S(C(KC_LEFT)));
+            break;
+
+        case KC_DLR:
+            register_or_unregister(keydown, S(KC_END));
+            break;
+        case LT(0, KC_CIRC): // my ^
+            if(record->tap.count==0) { return false; }
+            register_or_unregister(keydown, S(KC_HOME));
+            break;
+
+        case SFT_T(KC_ESC): // my ESC
+            if(record->tap.count==0) return true;
+            tap_code16(KC_LEFT);
             mode = NORMAL;
-        }
+            break;
+        case KC_D:
+        case KC_C:
+            tap_code16(C(KC_X));
+            mode = (keycode == KC_D ? NORMAL : INSERT);
+            break;
+        case KC_Y:
+            tap_code16(C(KC_C));
+            tap_code16(KC_LEFT);
+            mode = NORMAL;
+            break;
+
+        case KC_P:
+            register_or_unregister(keydown, C(KC_V));
+            mode = NORMAL;
+            break;
+        default:
+            return (mods & MOD_MASK_CTRL) || (keycode < KC_A || keycode > KC_Z);
+    }
+    return false;
+}
+#endif /* VIM_VISUAL_MODE */
+
+void layer_state_set_vim(layer_state_t state){
+    unregister_keycode();
+    is_vim_layer_on = IS_LAYER_ON_STATE(state, VIMISH);
+    if(is_vim_layer_on){
+        ML_LED_2((mode != INSERT));
+    } else{
+        ML_LED_2(false);
+        mode = NORMAL;
     }
 }
 
