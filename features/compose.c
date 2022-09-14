@@ -13,6 +13,7 @@ static enum Platform platform = LINUX;
 inline static void compose_vowel(uint16_t keycode);
 inline static void compose_n(void);
 inline static void compose_g(void);
+inline static void compose_d(void);
 
 static void linux_compose(uint16_t n1, uint8_t n2);
 static void win_ascii(uint8_t n1, uint8_t n2);
@@ -53,6 +54,9 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
             break;
         case KC_G:
             compose_g();
+            break;
+        case KC_D:
+            compose_d();
             break;
         default:
             composing = is_hold;
@@ -117,5 +121,19 @@ inline static void compose_g(void){
         return;
     }
     win_ascii(KC_KP_2, KC_KP_9);
+}
+
+inline static void compose_d(void){
+    if (platform == LINUX) {
+        linux_compose(KC_O, KC_O);
+        return;
+    }
+
+    register_code16(KC_LEFT_ALT);
+    tap_code(KC_KP_0);
+    tap_code(KC_KP_1);
+    tap_code(KC_KP_7);
+    tap_code(KC_KP_6);
+    unregister_code16(KC_LEFT_ALT);
 }
 
