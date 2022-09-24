@@ -1,7 +1,7 @@
 #include "vim_mode.h"
 #include "moonlander.h"
 
-#define MACRO_DELAY 50
+#define MACRO_DELAY 20
 
 enum vmode {
     NORMAL,
@@ -158,6 +158,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(mods & MOD_MASK_SHIFT){
                     del_mods(MOD_MASK_SHIFT);
                     tap_code(KC_END);
+                    add_mods(MOD_MASK_SHIFT);
                 } else
                 tap_code16(KC_RIGHT);
             }
@@ -168,6 +169,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(mods & MOD_MASK_SHIFT){
                     del_mods(MOD_MASK_SHIFT);
                     tap_code(KC_HOME);
+                    add_mods(MOD_MASK_SHIFT);
                 }
             }
             break;
@@ -177,6 +179,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(mods & MOD_MASK_SHIFT) {
                     del_mods(MOD_MASK_SHIFT);
                     SEND_STRING(SS_TAP(X_HOME) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER) SS_DELAY(MACRO_DELAY) SS_TAP(X_UP));
+                    add_mods(MOD_MASK_SHIFT);
                 } else {
                     SEND_STRING(SS_TAP(X_END) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER));
                 }
@@ -203,6 +206,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(keydown){
                     del_mods(MOD_MASK_SHIFT);
                     tap_code16(C(KC_END));
+                    add_mods(MOD_MASK_SHIFT);
                 }
             } else if(!keydown) {
                 mode = G_MODE;
@@ -211,6 +215,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
         case KC_V:
             if(mods & MOD_MASK_SHIFT){
                 if(keydown){
+                    del_mods(MOD_MASK_SHIFT);
                     tap_code16(KC_HOME);
                     tap_code16(S(KC_END));
                 }
@@ -328,6 +333,14 @@ static bool handle_visual(uint16_t keycode, keyrecord_t* record){
             break;
         case KC_B:
             register_or_unregister(keydown, S(C(KC_LEFT)));
+            break;
+        case KC_G:
+            if(!keydown) return true;
+            if(mods & MOD_MASK_SHIFT){
+                tap_code16(S(C(KC_END)));
+            } else if(keydown) {
+                tap_code16(S(C(KC_HOME)));
+            }
             break;
 
         case KC_DLR:
