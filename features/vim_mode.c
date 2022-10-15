@@ -224,7 +224,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
             if(!keydown) {
                 mode = VISUAL;
             }
-#endif /* DEBUG */
+#endif /* VIM_VISUAL_MODE */
         break;
 
         case KC_P:
@@ -265,7 +265,7 @@ static bool handle_delete(uint16_t keycode, keyrecord_t* record){
             break;
         case KC_I:
             tap_code16(C(KC_LEFT));
-            return false; // Stay in CHANGE/DELETE
+            return false; // Stay in CHANGE/DELETE, for `iw` motion
         case KC_L:
             tap_code16(KC_DELETE);
             break;

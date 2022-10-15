@@ -2,6 +2,7 @@
 #include "moonlander.h"
 
 #define MACRO_DELAY 50
+#define LINUX_COMPOSE_KEY KC_RIGHT_ALT
 
 enum Platform {
     LINUX,
@@ -59,7 +60,7 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
             compose_d();
             break;
         default:
-            composing = is_hold;
+            composing = is_hold || keycode == KC_RSFT || keycode == SFT_T(KC_ESC) || keycode == KC_CAPS_LOCK;
             ML_LED_4(composing);
             return true;
     }
@@ -69,8 +70,11 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
 }
 
 static void linux_compose(uint16_t n1, uint8_t n2){
-    tap_code(KC_RIGHT_ALT);
+    uint8_t mods = get_mods();
+    del_mods(MOD_MASK_SHIFT);
+    tap_code(LINUX_COMPOSE_KEY);
     tap_code16(n1);
+    set_mods(mods);
     tap_code(n2);
 }
 
