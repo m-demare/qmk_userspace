@@ -26,19 +26,19 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
 
     switch (keycode) {
         case COMPOSE:
-            if(record->event.pressed && record->tap.count > 2){
+            if(record->event.pressed && record->tap.count == 3){
                 platform = platform == LINUX ? WINDOWS : LINUX;
                 composing = false;
                 ML_LED_4(false);
-                return true;
+                return false;
             }
-            if(record->tap.count > 1){
-                // To give the option of actually press RALT
+            if(record->tap.count == 2){
+                // To give the option of actually pressing RALT
                 composing = false;
                 ML_LED_4(false);
                 return true;
             }
-            is_hold = record->tap.count != 1;
+            is_hold = record->tap.count == 0;
             const bool keydown = record->event.pressed;
             composing = (is_hold && keydown) || (!is_hold && ((keydown && !composing) || (!keydown && composing)));
             ML_LED_4(composing);
