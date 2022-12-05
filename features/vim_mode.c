@@ -156,9 +156,9 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
             if(keydown){
                 mode=INSERT;
                 if(mods & MOD_MASK_SHIFT){
-                    del_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
                     tap_code(KC_END);
-                    add_mods(MOD_MASK_SHIFT);
+                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
                 } else
                 tap_code16(KC_RIGHT);
             }
@@ -167,9 +167,9 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
             if(keydown){
                 mode=INSERT;
                 if(mods & MOD_MASK_SHIFT){
-                    del_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
                     tap_code(KC_HOME);
-                    add_mods(MOD_MASK_SHIFT);
+                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
                 }
             }
             break;
@@ -177,9 +177,9 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
             if(keydown){
                 mode=INSERT;
                 if(mods & MOD_MASK_SHIFT) {
-                    del_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
                     SEND_STRING(SS_TAP(X_HOME) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER) SS_DELAY(MACRO_DELAY) SS_TAP(X_UP));
-                    add_mods(MOD_MASK_SHIFT);
+                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
                 } else {
                     SEND_STRING(SS_TAP(X_END) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER));
                 }
@@ -204,9 +204,9 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
         case KC_G:
             if(mods & MOD_MASK_SHIFT){
                 if(keydown){
-                    del_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
                     tap_code16(C(KC_END));
-                    add_mods(MOD_MASK_SHIFT);
+                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
                 }
             } else if(!keydown) {
                 mode = G_MODE;
@@ -215,7 +215,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
         case KC_V:
             if(mods & MOD_MASK_SHIFT){
                 if(keydown){
-                    del_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
                     tap_code16(KC_HOME);
                     tap_code16(S(KC_END));
                 }
