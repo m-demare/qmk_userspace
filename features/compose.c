@@ -60,7 +60,7 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
             compose_d();
             break;
         default:
-            composing = is_hold || keycode == KC_RSFT || keycode == SFT_T(KC_ESC) || keycode == KC_CAPS_LOCK;
+            composing = is_hold || keycode == KC_RSFT || (keycode == SFT_T(KC_ESC) && is_hold) || keycode == KC_CAPS_LOCK;
             ML_LED_4(composing);
             return true;
     }
