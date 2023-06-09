@@ -19,6 +19,5 @@
     #include "../../../../platforms/progmem.h"
     #include <stdint.h>
     #define PROGMEM
-    #define ML_SAFE_RANGE 1
 #endif /* !PROGMEM */
 

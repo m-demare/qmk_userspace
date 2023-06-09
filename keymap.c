@@ -12,7 +12,7 @@
 #define MOON_LED_LEVEL LED_LEVEL
 
 enum custom_keycodes {
-    START = ML_SAFE_RANGE,
+    START = SAFE_RANGE,
 };
 
 // Abbreviations
@@ -38,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          DEL ,  Q  ,  W  ,  E  ,  R  ,  T  , XXX ,              TG_SYM,  Y  ,  U  ,  I  ,  O  ,  P  , BSLS,
          BSPC,  A  ,  S  ,  D  ,  _F ,  G  , XXX ,                XXX ,  H  ,  J  ,  K  ,  L  ,_SCLN,_QUOT,
          _ESC,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,_SLSH, RSFT,
-        LCTRL,  XXX,  XXX, LEFT,RIGHT,          TG_VIM,     TG_GAM,            UP , DOWN, XXX , XXX , XXX ,
+        LCTL ,  XXX,  XXX, LEFT,RIGHT,          TG_VIM,     TG_GAM,            UP , DOWN, XXX , XXX , XXX ,
                             SPC, LALT, LGUI,                            COMP, _TAB,ENTER
     ),
     [VIMISH] = LAYOUT_moonlander_mdemare(
@@ -70,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TAB  ,  Q  ,  W  ,  E  ,  R  ,     ,     ,                    ,     ,     ,     ,     ,     ,     ,
         CAPS ,  A  ,  S  ,  D  ,  F  ,     ,     ,                    ,     ,     ,     ,  UP ,     ,     ,
         LSFT ,  Z  ,  X  ,  C  ,     ,     ,                                ,     , LEFT, DOWN,RIGHT,     ,
-        LCTRL,     ,     ,     ,     ,                     ,       ,              ,     ,     ,     ,     ,
+        LCTL ,     ,     ,     ,     ,                     ,       ,              ,     ,     ,     ,     ,
                          SPACE ,     ,     ,                                ,     ,
     ),
 };
@@ -83,7 +83,7 @@ void keyboard_post_init_user(void) {
 }
 
 // clang-format off
-const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
+const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
     [VIMISH] = { {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {144,252,181}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {144,252,181}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {144,252,181}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {144,252,181}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210}, {89,252,210} },
 
     [SYMBOLS] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {127,245,221}, {127,245,221}, {127,245,221}, {0,0,0}, {0,0,0}, {127,245,221}, {127,245,221}, {127,245,221}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {127,245,221}, {127,245,221}, {127,245,221}, {0,0,0}, {0,0,0}, {127,245,221}, {127,245,221}, {127,245,221}, {127,245,221}, {0,0,0}, {127,245,221}, {127,245,221}, {127,245,221}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} },
@@ -96,7 +96,7 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
 // clang-format on
 
 void set_layer_color(int layer) {
-    for (int i = 0; i < DRIVER_LED_TOTAL; i++) {
+    for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
         HSV hsv = {
             .h = pgm_read_byte(&ledmap[layer][i][0]),
             .s = pgm_read_byte(&ledmap[layer][i][1]),
@@ -112,14 +112,14 @@ void set_layer_color(int layer) {
     }
 }
 
-void rgb_matrix_indicators_user(void) {
-    if (keyboard_config.disable_layer_led) { return; }
+bool rgb_matrix_indicators_user(void) {
+    if (keyboard_config.disable_layer_led) { return false; }
     uint8_t layer = biton32(layer_state);
     if (SYMBOLS == layer || VIMISH == layer || MOUSE_AND_MEDIA == layer || GAMING == layer) {
         set_layer_color(layer);
-    } else if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
-        rgb_matrix_set_color_all(0, 0, 0);
+        return false;
     }
+    return true;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
