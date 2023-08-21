@@ -66,10 +66,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                ,     ,     ,                                , WBAK, WFWD
     ),
     [GAMING] = LAYOUT_moonlander_mdemare(
-        ESC  ,     ,     ,     ,     ,     ,     ,                    ,     ,     ,     ,     ,     ,     ,
-        TAB  ,  Q  ,  W  ,  E  ,  R  ,     ,     ,                    ,     ,     ,     ,     ,     ,     ,
-        CAPS ,  A  ,  S  ,  D  ,  F  ,     ,     ,                    ,     ,     ,     ,  UP ,     ,     ,
-        LSFT ,  Z  ,  X  ,  C  ,     ,     ,                                ,     , LEFT, DOWN,RIGHT,     ,
+        ESC  ,  1  ,  2  ,  3  ,  4  ,  5  ,  6  ,                    ,     ,     ,     ,     ,     ,     ,
+        TAB  ,  Q  ,  W  ,  E  ,  R  ,  T  ,  7  ,                    ,     ,     ,     ,     ,     ,     ,
+        CAPS ,  A  ,  S  ,  D  ,  F  ,  G  ,  8  ,                    ,     ,     ,     ,  UP ,     ,     ,
+        LSFT ,  Z  ,  X  ,  C  ,  V  ,  B  ,                                ,     , LEFT, DOWN,RIGHT,     ,
         LCTL ,     ,     ,     ,     ,                     ,       ,              ,     ,     ,     ,     ,
                          SPACE ,     ,     ,                                ,     ,
     ),
