@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              , EXLM,  AT , LCBR, RCBR, PIPE,     ,                    ,MINUS,  7  ,  8  ,  9  , ASTR, F12 ,
              , HASH, DLR , LPRN, RPRN,GRAVE,     ,                    , UNDS,  4  ,  5  ,  6  , EQL , PPLS,
              , PERC,_CIRC, LBRC, RBRC, TILD,                            AMPR,  1  ,  2  ,  3  , BSLS,     ,
-             ,COMMA,     ,RGBDN,RGBUP,             RGBMD,  RGBTG,                 ,  0  , DOT ,     ,     ,
+             ,COMMA,     ,RGBDN,RGBUP,             RGBMD,   XXX ,                 ,  0  , DOT ,     ,     ,
                                ,     ,     ,                                ,     ,
     ),
     [MOUSE_AND_MEDIA] = LAYOUT_moonlander_mdemare(
