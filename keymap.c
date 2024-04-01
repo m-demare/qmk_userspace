@@ -35,8 +35,8 @@ enum custom_keycodes {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_moonlander_mdemare(
-        GRAVE,  1  ,  2  ,  3  ,  4  ,  5  , XXX ,               EQUAL,  6  ,  7  ,  8  ,  9  ,  0  ,MINUS,
-         DEL ,  Q  ,  W  ,  E  ,  R  ,  T  , XXX ,              TG_SYM,  Y  ,  U  ,  I  ,  O  ,  P  , BSLS,
+         XXX ,  1  ,  2  ,  3  ,  4  ,  5  , XXX ,                XXX ,  6  ,  7  ,  8  ,  9  ,  0  , XXX ,
+         DEL ,  Q  ,  W  ,  E  ,  R  ,  T  , XXX ,              TG_SYM,  Y  ,  U  ,  I  ,  O  ,  P  , XXX ,
          BSPC,  A  ,  S  ,  D  ,  _F ,  G  , XXX ,                XXX ,  H  ,  J  ,  K  ,  L  ,_SCLN,_QUOT,
          _ESC,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,_SLSH, RSFT,
         LCTL ,  XXX,  XXX, LEFT,RIGHT,          TG_VIM,     TG_GAM,            UP , DOWN, XXX , XXX , XXX ,
