@@ -13,6 +13,7 @@
 
 enum custom_keycodes {
     START = SAFE_RANGE,
+    KC_GCHAT,
 };
 
 // Abbreviations
@@ -67,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [GAMING] = LAYOUT_moonlander_mdemare(
         ESC  ,  1  ,  2  ,  3  ,  4  ,  5  ,  6  ,                    ,     ,     ,     ,     ,     ,     ,
-        TAB  ,  Q  ,  W  ,  E  ,  R  ,  T  ,  7  ,                    ,     ,     ,     ,     ,     ,     ,
+        TAB  ,  Q  ,  W  ,  E  ,  R  ,  T  ,  7  ,               GCHAT,     ,     ,     ,     ,     ,     ,
         CAPS ,  A  ,  S  ,  D  ,  F  ,  G  ,  8  ,                    ,     ,     ,     ,  UP ,     ,     ,
         LSFT ,  Z  ,  X  ,  C  ,  V  ,  B  ,                                ,     , LEFT, DOWN,RIGHT,     ,
         LCTL ,     ,     ,     ,     ,                     ,       ,              ,     ,     ,     ,     ,
@@ -141,6 +142,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 // On tap send ^. Cannot just return true, since LT(0, KC_CIRC)==LT(0, KC_6)
                 tap_code16(KC_CIRC);
             }
+            return false;
+        case KC_GCHAT:
+            if (!record->event.pressed) return false;
+            if (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) tap_code(KC_CAPS_LOCK);
+            layer_clear();
+            SEND_STRING(SS_LSFT(SS_TAP(X_ENTER)));
             return false;
     }
     return true;
