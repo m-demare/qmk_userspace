@@ -26,4 +26,4 @@ LAYOUT_moonlander( \
 #define KC_RGBUP RGB_VAI
 #define KC_RGBMD RGB_MOD
 #define KC_RGBTG RGB_TOG
-#define KC_RESET RESET
+#define KC_RESET QK_BOOT
