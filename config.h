@@ -1,7 +1,5 @@
-/*
-  Set any config.h overrides for your specific keymap here.
-  See config.h options at https://docs.qmk.fm/#/config_options?id=the-configh-file
-*/
+#pragma once
+
 #undef TAPPING_TERM
 #define TAPPING_TERM 170
 
@@ -14,6 +12,8 @@
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
 #define VIM_VISUAL_MODE
+
+#define TAPPING_TOGGLE 2
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
 #define RAW_USAGE_PAGE 0xFF60
