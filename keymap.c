@@ -6,9 +6,6 @@
 #include "features/compose.h"
 #include "features/vim_mode.h"
 
-// To avoid ccls complaining
-#include "dummy_includes.h"
-
 #define MOON_LED_LEVEL LED_LEVEL
 
 enum custom_keycodes {

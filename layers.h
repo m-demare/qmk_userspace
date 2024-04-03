@@ -1,6 +1,6 @@
 #pragma once
 
-enum layers {
+enum Layer {
     QWERTY,
     VIMISH,
     SYMBOLS,
