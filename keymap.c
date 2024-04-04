@@ -261,7 +261,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case KC_GCHAT:
             if (!record->event.pressed) return false;
-            if (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) tap_code(KC_CAPS_LOCK);
+            if (host_keyboard_led_state().caps_lock) tap_code(KC_CAPS_LOCK);
             layer_clear();
             SEND_STRING(SS_LSFT(SS_TAP(X_ENTER)));
             return false;
