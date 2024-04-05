@@ -19,7 +19,7 @@ enum custom_keycodes {
 #define KC_TG_VIM TG(VIMISH)
 #define KC_TG_GAM TG(GAMING)
 #define KC_SYM TT(SYMBOLS)
-#define KC_SOUND C(KC_TILD)
+#define KC_SOUND C(KC_GRAVE)
 
 // Special keys
 #define KC__CIRC LT(0, KC_CIRC)
@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [SYMBOLS] = LAYOUT_moonlander_mdemare(
              ,  F1 ,  F2 ,  F3 ,  F4 ,  F5 ,     ,                    ,  F6 ,  F7 ,  F8 ,  F9 , F10 , F11 ,
              , XXX ,  AT ,  LT ,  GT ,GRAVE,     ,                    , TILD, LCBR, RCBR, XXX , HASH, F12 ,
-             , DLR ,MINUS, PPLS, EQL , XXX ,     ,                    , PIPE, LPRN, RPRN, UNDS, ASTR,     ,
+             , DLR ,MINUS, PLUS, EQL , XXX ,     ,                    , PIPE, LPRN, RPRN, UNDS, ASTR,     ,
              ,_CIRC, PERC, EXLM, XXX , XXX ,                            AMPR, LBRC, RBRC, XXX , BSLS,     ,
              ,     ,     ,RGBDN,RGBUP,             RGBMD,   XXX ,                 , XXX , XXX ,     ,     ,
                                ,     ,     ,                                ,     ,
