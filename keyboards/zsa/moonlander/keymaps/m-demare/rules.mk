@@ -9,5 +9,6 @@ SWAP_HANDS_ENABLE = no
 AUDIO_ENABLE = no
 
 SRC = matrix.c
+SRC += keydefs.c
 SRC += features/vim_mode.c
 SRC += features/compose.c

@@ -1,88 +1,75 @@
-#include QMK_KEYBOARD_H
-#include "version.h"
-#include "keymap_us_international.h"
-#include "layers.h"
-#include "layout_mdemare.h"
-#include "features/compose.h"
-#include "features/vim_mode.h"
+#ifndef DRAW_KEYMAP
+    #include QMK_KEYBOARD_H
+    #include "keymap_spanish.h"
+    #include "layers.h"
+    #include "features/compose.h"
+    #include "features/vim_mode.h"
+#else
+    #define LAYOUT_moonlander LAYOUT
+    #define QWERTY 0
+    #define VIMISH 1
+    #define SYMBOLS 2
+    #define NUMBERS 3
+    #define MOUSE_AND_MEDIA 4
+    #define GAMING 5
+#endif /* ifndef DRAW_KEYMAP */
 
-#define MOON_LED_LEVEL LED_LEVEL
-
-enum custom_keycodes {
-    START = SAFE_RANGE,
-    KC_GCHAT,
-};
-
-// Abbreviations
-#define KC_COMP COMPOSE
-#define KC_TG_NUM TG(NUMBERS)
-#define KC_TG_VIM TG(VIMISH)
-#define KC_TG_GAM TG(GAMING)
-#define KC_SOUND C(KC_GRAVE)
-
-// Special keys
-#define KC__CIRC LT(0, KC_CIRC)
-#define KC__QUOT LGUI_T(KC_QUOT)
-#define KC__TAB LT(NUMBERS, KC_TAB)
-#define KC__ENTER LT(SYMBOLS, KC_ENTER)
-#define KC__Z CTL_T(KC_Z)
-#define KC__ESC SFT_T(KC_ESC)
-#define KC__F LT(VIMISH, KC_F)
-#define KC__SLSH RCTL_T(KC_SLSH)
-#define KC__SCLN LT(MOUSE_AND_MEDIA, KC_SCLN)
+#include "keydefs.h"
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [QWERTY] = LAYOUT_moonlander_mdemare(
-         XXX ,  1  ,  2  ,  3  ,  4  ,  5  , XXX ,                XXX ,  6  ,  7  ,  8  ,  9  ,  0  , XXX ,
-         DEL ,  Q  ,  W  ,  E  ,  R  ,  T  , XXX ,              TG_NUM,  Y  ,  U  ,  I  ,  O  ,  P  , XXX ,
-         BSPC,  A  ,  S  ,  D  ,  _F ,  G  , XXX ,                XXX ,  H  ,  J  ,  K  ,  L  ,_SCLN,_QUOT,
-         _ESC,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,_SLSH, RSFT,
-        LCTL , XXX , XXX , LEFT,RIGHT,          TG_VIM,     TG_GAM,            UP , DOWN, XXX , XXX , XXX ,
-                            SPC, LALT, LGUI,                            COMP, _TAB,_ENTER
+    [QWERTY] = LAYOUT_moonlander(
+         XXX ,  ES_1  ,  ES_2  ,  ES_3  ,  ES_4  ,  ES_5  , XXX ,                XXX ,  ES_6  ,  ES_7  ,  ES_8  ,  ES_9  ,  ES_0  ,  XXX   ,
+      KC_DEL ,  ES_Q  ,  ES_W  ,  ES_E  ,  ES_R  ,  ES_T  , XXX ,              TG_NUM,  ES_Y  ,  ES_U  ,  ES_I  ,  ES_O  ,  ES_P  ,  XXX   ,
+      KC_BSPC,  ES_A  ,  ES_S  ,  ES_D  ,   _F   ,  ES_G  , XXX ,                XXX ,  ES_H  ,  ES_J  ,  ES_K  ,  ES_L  , _SCLN  , _QUOT  ,
+         _ESC,   _Z   ,  ES_X  ,  ES_C  ,  ES_V  ,  ES_B  ,                             ES_N  ,  ES_M  , ES_COMM, ES_DOT , _SLSH  , KC_RSFT,
+     KC_LCTL ,  XXX   ,  XXX   ,KC_LEFT ,KC_RIGHT,        TG_VIM,              TG_GAM,           KC_UP , KC_DOWN,  XXX   ,  XXX   ,  XXX   ,
+                                 KC_SPC ,KC_LALT ,KC_LGUI ,                           COMPOSE ,  _TAB  , _ENTER
     ),
-    [VIMISH] = LAYOUT_moonlander_mdemare(
-             ,     ,     ,     ,     ,     ,     ,                    ,     ,     ,     ,     ,     ,     ,
-             ,  Q  ,  W  ,  E  ,  R  ,  T  ,     ,                    ,  Y  ,  U  ,  I  ,  O  ,  P  ,     ,
-             ,  A  ,  S  ,  D  ,     ,  G  ,     ,                    ,  H  ,  J  ,  K  ,  L  ,_SCLN,     ,
-             ,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,_SLSH,     ,
-             ,     ,     ,     ,     ,                  ,       ,                 ,     ,     ,     ,     ,
-                               ,     ,     ,                                ,     ,
+    [VIMISH] = LAYOUT_moonlander(
+          _  ,  _  ,  _  ,  _  ,  _  ,  _  ,  _  ,                  _ ,  _  ,  _  ,  _  ,  _  ,  _  ,  _  ,
+          _  ,  _  ,  _  ,  _  ,  _  ,  _  ,  _  ,                  _ ,  _  ,  _  ,  _  ,  _  ,  _  ,  _  ,
+          _  ,  _  ,  _  ,  _  ,  _  ,  _  ,  _  ,                  _ ,  _  ,  _  ,  _  ,  _  ,  _  ,  _  ,
+          _  ,  _  ,  _  ,  _  ,  _  ,  _  ,                             _  ,  _  ,  _  ,  _  ,  _  ,  _  ,
+          _  ,  _  ,  _  ,  _  ,  _  ,        _  ,                  _ ,        _  ,  _  ,  _  ,  _  ,  _  ,
+                            _  ,  _  ,  _  ,                             _  ,  _  ,  _
     ),
-    [SYMBOLS] = LAYOUT_moonlander_mdemare(
-             ,  F1 ,  F2 ,  F3 ,  F4 ,  F5 ,     ,                    ,  F6 ,  F7 ,  F8 ,  F9 , F10 , F11 ,
-             , XXX ,  AT , LCBR, RCBR, XXX ,     ,                    , XXX , XXX ,  LT ,  GT , HASH, F12 ,
-             , DLR , UNDS, LPRN, RPRN, TILD,     ,                    , PIPE, EQL , PLUS,MINUS, ASTR,     ,
-             ,_CIRC, PERC, LBRC, RBRC,GRAVE,                            AMPR, XXX , EXLM , XXX, BSLS,     ,
-             ,     ,     ,RGBDN,RGBUP,             RGBMD,   XXX ,                 , XXX , XXX ,     ,     ,
-                               ,     ,     ,                                ,     ,
+    [SYMBOLS] = LAYOUT_moonlander(
+          _   , KC_F1 , KC_F2 , KC_F3 , KC_F4 , KC_F5 ,   _   ,                   _  , KC_F6 , KC_F7 , KC_F8 , KC_F9 , KC_F10, KC_F11,
+          _   ,  XXX  , ES_AT ,ES_LCBR,ES_RCBR,  XXX  ,   _   ,                   _  ,  XXX  ,  XXX  ,ES_LABK,ES_RABK,ES_HASH, KC_F12,
+          _   ,ES_DLR ,ES_UNDS,ES_LPRN,ES_RPRN,ES_TILD,   _   ,                   _  ,ES_PIPE, ES_EQL,ES_PLUS,ES_MINS,ES_ASTR,   _   ,
+          _   , _CIRC ,ES_PERC,ES_LBRC,ES_RBRC,  GRV  ,                               ES_AMPR,  XXX  ,ES_EXLM,  XXX , ES_BSLS,   _   ,
+          _   ,   _   ,   _   ,RGB_VAD,RGB_VAI,       RGB_MOD,                 XXX  ,           _   ,  XXX  ,  XXX  ,   _   ,   _   ,
+                                  _   ,   _   ,   _   ,                                  _   ,   _   ,   _
     ),
-    [NUMBERS] = LAYOUT_moonlander_mdemare(
+    [NUMBERS] = LAYOUT_moonlander(
          XXX , XXX , XXX , XXX , XXX , XXX , XXX ,                XXX , XXX , XXX , XXX , XXX , XXX , XXX ,
-         XXX , XXX , XXX , XXX , XXX , XXX , XXX ,                    , XXX ,  7  ,  8  ,  9  , XXX , XXX ,
-             , XXX , XXX , XXX , XXX , XXX , XXX ,                XXX , XXX ,  4  ,  5  ,  6  ,  0  , XXX ,
-             ,     , XXX , XXX , XXX , XXX ,                            XXX ,  1  ,  2  ,  3  ,     ,     ,
-             , XXX ,     ,     ,     ,              XXX ,   XXX ,                 ,     , XXX , XXX , XXX ,
-                               ,     ,     ,                            XXX ,     ,
+         XXX , XXX , XXX , XXX , XXX , XXX , XXX ,                 _  , XXX ,KC_7 ,KC_8 ,KC_9 , XXX , XXX ,
+          _  , XXX , XXX , XXX , XXX , XXX , XXX ,                XXX , XXX ,KC_4 ,KC_5 ,KC_6 ,KC_0 , XXX ,
+          _  ,  _  , XXX , XXX , XXX , XXX ,                            XXX ,KC_1 ,KC_2 ,KC_3 ,  _  ,  _  ,
+          _  , XXX ,  _  ,  _  ,  _  ,       XXX ,                XXX ,        _  ,  _  , XXX , XXX , XXX ,
+                            _  ,  _  ,  _  ,                            XXX ,  _  ,  _
     ),
-    [MOUSE_AND_MEDIA] = LAYOUT_moonlander_mdemare(
-             ,     ,     ,     ,     ,     ,     ,                    ,     ,     ,     ,     ,     ,RESET,
-             ,     , BTN1, MS_U, BTN2, WH_U,     ,                    ,     ,     ,     ,     ,     ,     ,
-             ,     , MS_L, MS_D, MS_R, WH_D,     ,                    ,     ,     ,     ,     ,     , MPLY,
-             ,     ,     ,     ,     ,     ,                                ,     ,     ,     ,     ,     ,
-             ,     ,     , MPRV, MNXT,                  ,       ,             VOLU, VOLD, MUTE,     ,     ,
-                               ,     ,     ,                                , WBAK, WFWD
+    [MOUSE_AND_MEDIA] = LAYOUT_moonlander(
+          _   ,   _   ,   _   ,   _   ,   _   ,   _   ,   _   ,                  _   ,   _   ,   _   ,   _   ,   _   ,   _   ,QK_BOOT,
+          _   ,   _   ,KC_BTN1,KC_MS_U,KC_BTN2,KC_WH_U,   _   ,                  _   ,   _   ,   _   ,   _   ,   _   ,   _   ,   _   ,
+          _   ,   _   ,KC_MS_L,KC_MS_D,KC_MS_R,KC_WH_D,   _   ,                  _   ,   _   ,   _   ,   _   ,   _   ,   _   ,KC_MPLY,
+          _   ,   _   ,   _   ,   _   ,   _   ,   _   ,                                  _   ,   _   ,   _   ,   _   ,   _   ,   _   ,
+          _   ,   _   ,   _   ,KC_MPRV,KC_MNXT,                   _    ,         _   ,        KC_VOLU,KC_VOLD,KC_MUTE,   _   ,   _   ,
+                                  _   ,   _   ,   _   ,                                  _   ,KC_WBAK,KC_WFWD
     ),
-    [GAMING] = LAYOUT_moonlander_mdemare(
-        ESC  ,  1  ,  2  ,  3  ,  4  ,  5  ,  6  ,                    ,     ,     ,     ,     ,     ,     ,
-        TAB  ,  Q  ,  W  ,  E  ,  R  ,  T  ,  7  ,               GCHAT,     ,     ,     ,     ,     ,     ,
-        CAPS ,  A  ,  S  ,  D  ,  F  ,  G  ,  8  ,               SOUND,     ,     ,     ,  UP ,     ,     ,
-        LSFT ,  Z  ,  X  ,  C  ,  V  ,  B  ,                                ,     , LEFT, DOWN,RIGHT,     ,
-        LCTL ,     ,     ,     ,     ,                     ,       ,              ,     ,     ,     ,     ,
-                         SPACE , LALT,     ,                                ,     ,
+    [GAMING] = LAYOUT_moonlander(
+      KC_ESC  , ES_1  , ES_2  , ES_3  , ES_4  , ES_5  , ES_6  ,                  _   ,   _   ,   _   ,   _   ,   _   ,   _   ,   _   ,
+      KC_TAB  , ES_Q  , ES_W  , ES_E  , ES_R  , ES_T  , ES_7  ,              KC_GCHAT,   _   ,   _   ,   _   ,   _   ,   _   ,   _   ,
+      KC_CAPS , ES_A  , ES_S  , ES_D  , ES_F  , ES_G  , ES_8  ,              KC_SOUND,   _   ,   _   ,   _   , KC_UP ,   _   ,   _   ,
+      KC_LSFT , ES_Z  , ES_X  , ES_C  , ES_V  , ES_B  ,                                  _   ,   _   ,KC_LEFT,KC_DOWN,KC_RIGHT,  _   ,
+      KC_LCTL ,   _   ,   _   ,   _   ,   _   ,           _,                     _   ,           _   ,   _   ,   _   ,   _   ,   _   ,
+                                KC_SPC,KC_LALT,   _   ,                                  _   ,   _   ,   _
     ),
 };
 // clang-format on
+
+#undef _
 
 extern rgb_config_t rgb_matrix_config;
 
@@ -249,14 +236,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_vim(keycode, record)) { return false; }
 
     switch (keycode) {
-        case LT(0, KC_CIRC):
+        case _CIRC:
             if (!record->tap.count && record->event.pressed) {
                 tap_code16(C(KC_6)); // On hold send ctrl-^ (buffer swap)
                 return false;
             }
             if (record->event.pressed) {
-                // On tap send ^. Cannot just return true, since LT(0, KC_CIRC)==LT(0, KC_6)
-                tap_code16(KC_CIRC);
+                // On tap send ^
+                tap_sequence(CIRC);
             }
             return false;
         case KC_GCHAT:
@@ -265,6 +252,62 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             layer_clear();
             tap_code(KC_ENTER);
             return false;
+        case _QUOT:
+            if (record->tap.count && record->event.pressed) {
+                if(get_active_mods() & MOD_MASK_SHIFT)
+                    tap_code16(ES_DQUO);
+                else
+                    tap_code(ES_QUOT);
+            } else if (!record->tap.count){
+                return true;
+            }
+            return false;
+        case _SLSH:
+            if (record->tap.count && record->event.pressed) {
+                if(get_active_mods() & MOD_MASK_SHIFT)
+                    tap_code16(ES_QUES);
+                else
+                    tap_code16(ES_SLSH);
+            } else if (!record->tap.count){
+                return true;
+            }
+            return false;
+        case _SCLN:
+            if (record->tap.count && record->event.pressed) {
+                if(get_active_mods() & MOD_MASK_SHIFT)
+                    tap_code16(ES_COLN);
+                else
+                    tap_code16(ES_SCLN);
+            } else if (!record->tap.count){
+                return true;
+            }
+            return false;
+        case FIRST_SEQUENCE_INDEX ... LAST_SEQUENCE_INDEX:
+            if (!record->event.pressed) return false;
+            tap_sequence(keycode);
+            return false;
     }
     return true;
+}
+
+bool caps_word_press_user(uint16_t keycode) {
+    switch (keycode) {
+        // Keycodes that continue Caps Word, with shift applied.
+        case ES_A ... ES_Z:
+            add_weak_mods(MOD_BIT_LSHIFT);
+            return true;
+
+        // Keycodes that continue Caps Word, without shifting.
+        case ES_1 ... ES_0:
+        case KC_BSPC:
+        case KC_DEL:
+        case ES_UNDS:
+        case ES_MINS:
+        case COMPOSE:
+            return true;
+
+        // Deactivate Caps Word.
+        default:
+            return false;
+    }
 }

@@ -43,7 +43,7 @@ static bool handle_g_mode(uint16_t keycode, keyrecord_t* record);
 static bool handle_visual(uint16_t keycode, keyrecord_t* record);
 #endif /* VIM_VISUAL_MODE */
 
-static uint8_t get_active_mods(void){
+inline uint8_t get_active_mods(void){
     const uint8_t mods = get_mods();
 #ifndef NO_ACTION_ONESHOT
     const uint8_t all_mods = mods | get_oneshot_mods();
@@ -158,7 +158,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(mods & MOD_MASK_SHIFT){
                     unregister_mods(MOD_MASK_SHIFT);
                     tap_code(KC_END);
-                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
+                    register_weak_mods(MOD_BIT_LSHIFT);
                 } else
                 tap_code16(KC_RIGHT);
             }
@@ -169,7 +169,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(mods & MOD_MASK_SHIFT){
                     unregister_mods(MOD_MASK_SHIFT);
                     tap_code(KC_HOME);
-                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
+                    register_weak_mods(MOD_BIT_LSHIFT);
                 }
             }
             break;
@@ -179,7 +179,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(mods & MOD_MASK_SHIFT) {
                     unregister_mods(MOD_MASK_SHIFT);
                     SEND_STRING(SS_TAP(X_HOME) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER) SS_DELAY(MACRO_DELAY) SS_TAP(X_UP));
-                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
+                    register_weak_mods(MOD_BIT_LSHIFT);
                 } else {
                     SEND_STRING(SS_TAP(X_END) SS_DELAY(MACRO_DELAY) SS_TAP(X_ENTER));
                 }
@@ -206,7 +206,7 @@ static bool handle_normal(uint16_t keycode, keyrecord_t* record){
                 if(keydown){
                     unregister_mods(MOD_MASK_SHIFT);
                     tap_code16(C(KC_END));
-                    register_weak_mods(MOD_BIT(KC_LEFT_SHIFT));
+                    register_weak_mods(MOD_BIT_LSHIFT);
                 }
             } else if(!keydown) {
                 mode = G_MODE;
