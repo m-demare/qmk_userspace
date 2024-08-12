@@ -18,13 +18,13 @@ enum custom_keycodes {
 #define KC_TG_NUM TG(NUMBERS)
 #define KC_TG_VIM TG(VIMISH)
 #define KC_TG_GAM TG(GAMING)
-#define KC_SYM TT(SYMBOLS)
 #define KC_SOUND C(KC_GRAVE)
 
 // Special keys
 #define KC__CIRC LT(0, KC_CIRC)
 #define KC__QUOT LGUI_T(KC_QUOT)
 #define KC__TAB LT(NUMBERS, KC_TAB)
+#define KC__ENTER LT(SYMBOLS, KC_ENTER)
 #define KC__Z CTL_T(KC_Z)
 #define KC__ESC SFT_T(KC_ESC)
 #define KC__F LT(VIMISH, KC_F)
@@ -38,22 +38,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          DEL ,  Q  ,  W  ,  E  ,  R  ,  T  , XXX ,              TG_NUM,  Y  ,  U  ,  I  ,  O  ,  P  , XXX ,
          BSPC,  A  ,  S  ,  D  ,  _F ,  G  , XXX ,                XXX ,  H  ,  J  ,  K  ,  L  ,_SCLN,_QUOT,
          _ESC,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,_SLSH, RSFT,
-        LCTL , XXX , LALT, LEFT,RIGHT,          TG_VIM,     TG_GAM,            UP , DOWN, XXX , XXX , XXX ,
-                            SPC, SYM , LGUI,                            COMP, _TAB,ENTER
+        LCTL , XXX , XXX , LEFT,RIGHT,          TG_VIM,     TG_GAM,            UP , DOWN, XXX , XXX , XXX ,
+                            SPC, LALT, LGUI,                            COMP, _TAB,_ENTER
     ),
     [VIMISH] = LAYOUT_moonlander_mdemare(
              ,     ,     ,     ,     ,     ,     ,                    ,     ,     ,     ,     ,     ,     ,
              ,  Q  ,  W  ,  E  ,  R  ,  T  ,     ,                    ,  Y  ,  U  ,  I  ,  O  ,  P  ,     ,
-             ,  A  ,  S  ,  D  ,     ,  G  ,     ,                    ,  H  ,  J  ,  K  ,  L  ,     ,     ,
-             ,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,     ,     ,
+             ,  A  ,  S  ,  D  ,     ,  G  ,     ,                    ,  H  ,  J  ,  K  ,  L  ,_SCLN,     ,
+             ,  _Z ,  X  ,  C  ,  V  ,  B  ,                             N  ,  M  ,COMMA, DOT ,_SLSH,     ,
              ,     ,     ,     ,     ,                  ,       ,                 ,     ,     ,     ,     ,
                                ,     ,     ,                                ,     ,
     ),
     [SYMBOLS] = LAYOUT_moonlander_mdemare(
              ,  F1 ,  F2 ,  F3 ,  F4 ,  F5 ,     ,                    ,  F6 ,  F7 ,  F8 ,  F9 , F10 , F11 ,
-             , XXX ,  AT ,  LT ,  GT ,GRAVE,     ,                    , TILD, LCBR, RCBR, XXX , HASH, F12 ,
-             , DLR ,MINUS, PLUS, EQL , XXX ,     ,                    , PIPE, LPRN, RPRN, UNDS, ASTR,     ,
-             ,_CIRC, PERC, EXLM, XXX , XXX ,                            AMPR, LBRC, RBRC, XXX , BSLS,     ,
+             , XXX ,  AT , LCBR, RCBR, XXX ,     ,                    , XXX , XXX ,  LT ,  GT , HASH, F12 ,
+             , DLR , UNDS, LPRN, RPRN, TILD,     ,                    , PIPE, EQL , PLUS,MINUS, ASTR,     ,
+             ,_CIRC, PERC, LBRC, RBRC,GRAVE,                            AMPR, XXX , EXLM , XXX, BSLS,     ,
              ,     ,     ,RGBDN,RGBUP,             RGBMD,   XXX ,                 , XXX , XXX ,     ,     ,
                                ,     ,     ,                                ,     ,
     ),
@@ -121,8 +121,8 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
         NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
-        NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
-        NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
+        NO_COL, {127,245,221}, {127,245,221}, {127,245,221}, NO_COL,
+        NO_COL, {127,245,221}, {127,245,221}, {127,245,221}, NO_COL,
         NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL,
 
@@ -131,8 +131,8 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
         NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
-        NO_COL, {127,245,221}, {127,245,221}, {127,245,221}, NO_COL,
-        NO_COL, {127,245,221}, {127,245,221}, {127,245,221}, NO_COL,
+        NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
+        NO_COL, NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL, NO_COL,
         NO_COL, NO_COL, NO_COL,
 
@@ -263,7 +263,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (!record->event.pressed) return false;
             if (host_keyboard_led_state().caps_lock) tap_code(KC_CAPS_LOCK);
             layer_clear();
-            SEND_STRING(SS_LSFT(SS_TAP(X_ENTER)));
+            tap_code(KC_ENTER);
             return false;
     }
     return true;
