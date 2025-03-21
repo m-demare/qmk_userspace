@@ -4,7 +4,6 @@
 #include "moonlander.h"
 
 #define MACRO_DELAY 50
-#define LINUX_COMPOSE_KEY KC_RIGHT_ALT
 
 inline static void compose_vowel(uint16_t keycode);
 inline static void compose_n(void);
