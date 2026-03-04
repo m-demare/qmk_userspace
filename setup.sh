@@ -10,3 +10,5 @@ qmk setup
 popd
 
 qmk config user.overlay_dir="$(realpath .)"
+
+# To compile, run `qmk compile -kb zsa/moonlander -km m-demare` on the qmk_firmware repo

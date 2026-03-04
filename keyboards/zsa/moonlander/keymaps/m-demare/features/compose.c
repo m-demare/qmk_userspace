@@ -9,6 +9,8 @@ inline static void compose_vowel(uint16_t keycode);
 inline static void compose_n(void);
 inline static void compose_g(void);
 inline static void compose_d(void);
+inline static void compose_c(void);
+inline static void compose_dot(void);
 
 void with_no_mods_tap16(uint16_t key, uint8_t MODS_TO_REMOVE) {
     const uint8_t mods = get_mods();
@@ -51,14 +53,20 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
         case ES_U:
             compose_vowel(keycode);
             break;
-        case KC_N:
+        case ES_N:
             compose_n();
             break;
-        case KC_G:
+        case ES_G:
             compose_g();
             break;
-        case KC_D:
+        case ES_D:
             compose_d();
+            break;
+        case ES_C:
+            compose_c();
+            break;
+        case ES_DOT:
+            compose_dot();
             break;
         default:
             composing = is_hold || keycode == KC_RSFT || (keycode == SFT_T(KC_ESC) && is_hold) || keycode == KC_CAPS_LOCK;
@@ -71,8 +79,14 @@ bool process_record_compose(uint16_t keycode, keyrecord_t* record){
 }
 
 inline static void compose_vowel(uint16_t keycode){
-    with_no_mods_tap16(ES_ACUT, MOD_MASK_SHIFT);
-    tap_code(keycode);
+    const uint8_t mods = get_mods();
+    if(mods & MOD_MASK_CTRL)
+        with_no_mods_tap16(ES_GRV, MOD_MASK_SHIFT | MOD_MASK_CTRL);
+    else if (mods & MOD_MASK_ALT)
+        with_no_mods_tap16(ES_CIRC, MOD_MASK_SHIFT | MOD_MASK_ALT);
+    else
+        with_no_mods_tap16(ES_ACUT, MOD_MASK_SHIFT);
+    with_no_mods_tap16(keycode, MOD_MASK_CTRL | MOD_MASK_ALT);
 }
 
 inline static void compose_n(void){
@@ -87,5 +101,13 @@ inline static void compose_g(void){
 
 inline static void compose_d(void){
     tap_code(ES_MORD);
+}
+
+inline static void compose_c(void){
+    tap_code(ES_CCED);
+}
+
+inline static void compose_dot(void){
+    tap_code16(ES_DIAE);
 }
 
